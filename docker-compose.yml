@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      LOCALSTACK_SERVICES: sqs
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: localstack
+      AWS_SECRET_ACCESS_KEY: localstack
+    volumes:
+      - "./localstack:/etc/localstack"
+      - "./localstack/init:/docker-entrypoint-initaws.d"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: >
+      sh -c "localstack start --docker"
+    networks:
+      - rede-san-giorgio
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: san-giorgio
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - rede-san-giorgio
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8083:80"
+  pagamento:
+    build: 
+      dockerfile: ./pagamento/Dockerfile
+      context: .
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+      - localstack
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/san-giorgio
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      AWS_REGION: us-east-1
+      SQS_PAGAMENTO_TOTAL: http://localstack:4566/000000000000/pagamento-total
+      SQS_PAGAMENTO_PARCIAL: http://localstack:4566/000000000000/pagamento-parcial
+      SQS_PAGAMENTO_EXCEDENTE: http://localstack:4566/000000000000/pagamento-excedente
+      AWS_ACCESS_KEY_ID: localstack
+      AWS_SECRET_ACCESS_KEY: localstack
+    networks:
+      - rede-san-giorgio
+  vendedor:
+    build: 
+      dockerfile: ./vendedor/Dockerfile
+      context: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/san-giorgio
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      - rede-san-giorgio
+  orquestrador:
+    build: 
+      dockerfile: ./orquestrador/Dockerfile
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - vendedor
+      - pagamento
+    networks:
+      - rede-san-giorgio
+
+networks:
+  rede-san-giorgio:
+    driver: bridge

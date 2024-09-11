@@ -1,0 +1,25 @@
+server:
+  port: 8082
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+aws:
+  sqs:
+    chave-acesso: ${AWS_ACCESS_KEY_ID}
+    chave-secreta: ${AWS_SECRET_ACCESS_KEY}
+    regiao: ${AWS_REGION}
+    endpoints:
+      pagamento-total:
+        url: ${SQS_PAGAMENTO_TOTAL}
+      pagamento-parcial:
+        url: ${SQS_PAGAMENTO_PARCIAL}
+      pagamento-excedente:
+        url: ${SQS_PAGAMENTO_EXCEDENTE}
