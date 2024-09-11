@@ -1,12 +1,12 @@
 package com.arthurazevedo.pagamento.infrastructure.messaging;
 
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.arthurazevedo.pagamento.domain.messaging.Producer;
+import com.arthurazevedo.pagamento.domain.messaging.FilaParcialProducer;
 import com.arthurazevedo.pagamento.infrastructure.config.properties.PagamentoParcialProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PagamentoParcialProducer implements Producer {
+public class PagamentoParcialProducer implements FilaParcialProducer {
 
     private final AmazonSQS amazonSQS;
     private final PagamentoParcialProperties sqsProperties;

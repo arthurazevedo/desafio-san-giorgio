@@ -5,15 +5,15 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.arthurazevedo.pagamento.infrastructure.config.properties.SqsProperties;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class SqsConfiguration {
 
-    @Autowired
-    private SqsProperties propriedadesSQS;
+    private final SqsProperties propriedadesSQS;
 
     @Bean
     public AmazonSQS amazonSQS() {

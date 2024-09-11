@@ -1,7 +1,7 @@
 package com.arthurazevedo.pagamento.application.usecase;
 
 import com.arthurazevedo.pagamento.application.exception.CobrancaNaoEncontradaException;
-import com.arthurazevedo.pagamento.domain.model.Cobranca;
+import com.arthurazevedo.pagamento.domain.model.Pagamento;
 import com.arthurazevedo.pagamento.domain.repository.CobrancaRepository;
 
 public class ValidaCobranca {
@@ -12,7 +12,9 @@ public class ValidaCobranca {
         this.cobrancaRepository = cobrancaRepository;
     }
 
-    public Cobranca execute(Long codigoCobranca) {
-        return cobrancaRepository.getByCodigo(codigoCobranca).orElseThrow(() -> new CobrancaNaoEncontradaException(codigoCobranca));
+    public void execute(Long codigoVendedor, Pagamento pagamento) {
+        cobrancaRepository
+                .getByCodigoAndVendedor(pagamento.getCodigoCobranca(), codigoVendedor)
+                .orElseThrow(() -> new CobrancaNaoEncontradaException(pagamento.getCodigoCobranca(), codigoVendedor));
     }
 }

@@ -1,6 +1,5 @@
 package com.arthurazevedo.pagamento.domain.messaging;
 
-public interface Producer {
-
+public interface FilaTotalProducer {
     void enviarMensagem(String message);
 }

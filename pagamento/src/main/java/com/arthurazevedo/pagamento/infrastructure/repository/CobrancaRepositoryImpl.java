@@ -7,7 +7,6 @@ import com.arthurazevedo.pagamento.infrastructure.repository.jpa.CobrancaJpaRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Component
@@ -18,12 +17,7 @@ public class CobrancaRepositoryImpl implements CobrancaRepository {
     private static final CobrancaMapper cobrancaMapper = CobrancaMapper.INSTANCE;
 
     @Override
-    public Optional<Cobranca> getByCodigo(Long codigo) {
-        return repositorio.getByCodigo(codigo).map(cobrancaMapper::cobrancaEntityToCobranca);
-    }
-
-    @Override
-    public BigDecimal getValorByCodigo(Long codigo) {
-        return null;
+    public Optional<Cobranca> getByCodigoAndVendedor(Long codigo, Long codigoVendedor) {
+        return repositorio.getByCodigoAndCodigoVendedor(codigo, codigoVendedor).map(cobrancaMapper::cobrancaEntityToCobranca);
     }
 }

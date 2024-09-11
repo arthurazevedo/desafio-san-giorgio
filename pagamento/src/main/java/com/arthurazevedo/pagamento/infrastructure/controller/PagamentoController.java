@@ -1,21 +1,30 @@
 package com.arthurazevedo.pagamento.infrastructure.controller;
 
-import com.arthurazevedo.pagamento.application.usecase.ValidaCobranca;
-import com.arthurazevedo.pagamento.domain.model.Cobranca;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.arthurazevedo.pagamento.application.usecase.ProcessaPagamento;
+import com.arthurazevedo.pagamento.domain.model.EntradaPagamento;
+import com.arthurazevedo.pagamento.infrastructure.mapper.EntradaPagamentoMapper;
+import com.arthurazevedo.pagamento.infrastructure.model.EntradaPagamentosDTO;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/pagamento")
+@RequiredArgsConstructor
 public class PagamentoController {
 
-    @Autowired
-    private ValidaCobranca validaCobranca;
+    private final ProcessaPagamento processaPagamento;
+    private static final EntradaPagamentoMapper entradaPagamentoMapper = EntradaPagamentoMapper.INSTANCE;
 
-    @GetMapping("/valida/{codigo}")
-    public ResponseEntity<Cobranca> validaCobranca(@PathVariable("codigo") Long codigo) {
-        return ResponseEntity.ok(validaCobranca.execute(codigo));
+    @PostMapping("/processa")
+    public ResponseEntity<EntradaPagamentosDTO> validaCobranca(@RequestBody @Valid EntradaPagamentosDTO entradaPagamentos) {
+
+        EntradaPagamento retorno = processaPagamento.execute(entradaPagamentoMapper.toEntradaPagamento(entradaPagamentos));
+
+        return ResponseEntity.ok(entradaPagamentoMapper.toEntradaPagamentoDTO(retorno));
     }
 }

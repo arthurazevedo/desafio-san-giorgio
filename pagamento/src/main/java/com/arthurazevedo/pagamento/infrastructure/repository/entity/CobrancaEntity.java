@@ -15,4 +15,5 @@ public class CobrancaEntity {
     @Id
     private Long codigo;
     private BigDecimal valor;
+    private Long codigoVendedor;
 }

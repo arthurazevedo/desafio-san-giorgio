@@ -1,12 +1,12 @@
 package com.arthurazevedo.pagamento.infrastructure.messaging;
 
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.arthurazevedo.pagamento.domain.messaging.Producer;
+import com.arthurazevedo.pagamento.domain.messaging.FilaExcedenteProducer;
 import com.arthurazevedo.pagamento.infrastructure.config.properties.PagamentoExcedenteProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PagamentoExcedenteProducer implements Producer {
+public class PagamentoExcedenteProducer implements FilaExcedenteProducer {
 
     private final AmazonSQS amazonSQS;
     private final PagamentoExcedenteProperties sqsProperties;
