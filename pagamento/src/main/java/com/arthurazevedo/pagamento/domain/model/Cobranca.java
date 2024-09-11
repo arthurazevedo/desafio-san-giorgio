@@ -1,11 +1,26 @@
 package com.arthurazevedo.pagamento.domain.model;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 
-@Data
 public class Cobranca {
     private Long codigo;
     private BigDecimal valor;
+
+    public Cobranca() {}
+
+    public Long getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public void setValor(BigDecimal valor) {
+        this.valor = valor;
+    }
 }
