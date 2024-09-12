@@ -8,7 +8,7 @@ Essas instruções permitirão que você obtenha uma cópia do projeto em opera�
 
 ## 📦 Execuando
 
-Para executar o projeto você precisará ter o Docker em sua máquina e pode ser útil ter o aws-cli.
+Para executar o projeto você precisará ter o Docker em sua máquina e pode ser preciso ter o [aws-cli](https://awscli.amazonaws.com/AWSCLIV2.msi). <b>CASO AS FILAS NÃO SEJAM CRIADAS AUTOMATICAMENTE, RODAR MANUALMENTE OS COMANDOS DO ARQUIVO <i>/localstack-scripts/create.sh</i>, PARA ISSO SERÁ NECESSÁRIO INSTALAR O AWS-CLI</b>
  - Faça o clone do projeto em uma pasta de sua preferência
  - Por linha de comando entre na pasta raiz do projeto e execute <b>docker-compose up --build</b>
  - Após isso o serviço de orquestração será executado no <b>localhost:8080</b>, foi disponibilizado também um pgAdmin no <b>localhost:8083</b>, email admin@mail.com e senha admin, todas as tabelas e filas também serão criadas
