@@ -31,6 +31,8 @@ public class ProcessaPagamento {
 
     public EntradaPagamento execute(EntradaPagamento entradaPagamentos) {
 
+        log.info("Iniciado processamento de pagamento");
+
         validaCobrancas(entradaPagamentos);
 
         List<Pagamento> pagemtnosEnviados = entradaPagamentos.getPagamentos().stream()
@@ -44,7 +46,7 @@ public class ProcessaPagamento {
     private Pagamento processa(Long codigoVendedor, Pagamento pagamento) {
         Long codigoCobranca = pagamento.getCodigoCobranca();
 
-        Cobranca cobranca = cobrancaRepository.getByCodigoAndVendedor(codigoVendedor, codigoCobranca)
+        Cobranca cobranca = cobrancaRepository.getByCodigoAndVendedor(codigoCobranca, codigoVendedor)
                 .orElseThrow(() -> new CobrancaNaoEncontradaException(codigoCobranca, codigoVendedor));
 
         pagamento.setStatusPagamento(validaStatus(cobranca, pagamento));
@@ -67,7 +69,10 @@ public class ProcessaPagamento {
     }
 
     private void validaCobrancas(EntradaPagamento entradaPagamentos) {
+        log.info("Validando cobrancas");
+
         Long codigoVendedor = entradaPagamentos.getCodigoVendedor();
+
         for (Pagamento pagamento : entradaPagamentos.getPagamentos()) {
             validaCobranca.execute(codigoVendedor, pagamento);
         }

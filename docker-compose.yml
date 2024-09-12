@@ -7,12 +7,14 @@ services:
       - "4566:4566"
     environment:
       LOCALSTACK_SERVICES: sqs
+      DOCKER_HOST: unix:///var/run/docker.sock
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: localstack
       AWS_SECRET_ACCESS_KEY: localstack
     volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./localstack-scripts/create.sh:/etc/localstack/init/ready.d/create.sh"
       - "./localstack:/etc/localstack"
-      - "./localstack/init:/docker-entrypoint-initaws.d"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     command: >
@@ -38,6 +40,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "8083:80"
+    networks:
+      - rede-san-giorgio
   pagamento:
     build: 
       dockerfile: ./pagamento/Dockerfile
