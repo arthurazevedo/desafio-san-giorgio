@@ -1,7 +1,6 @@
 package com.arthurazevedo.orquestrador.controller.exceptionhandler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -10,9 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.List;
-
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -32,5 +30,11 @@ public class ExceptionController {
         String mensagemErro = String.join(", ", ex.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList());
         ErroResponse erro = new ErroResponse(BAD_REQUEST.value(), mensagemErro);
         return ResponseEntity.badRequest().body(erro);
+    }
+
+    @ExceptionHandler(ErroInternoException.class)
+    public ResponseEntity<ErroResponse> erroInterno(ErroInternoException ex) {
+        ErroResponse erro = new ErroResponse(INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+        return ResponseEntity.internalServerError().body(erro);
     }
 }

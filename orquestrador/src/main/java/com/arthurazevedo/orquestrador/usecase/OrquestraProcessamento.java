@@ -2,6 +2,7 @@ package com.arthurazevedo.orquestrador.usecase;
 
 import com.arthurazevedo.orquestrador.client.PagamentoClient;
 import com.arthurazevedo.orquestrador.client.VendedorClient;
+import com.arthurazevedo.orquestrador.controller.exceptionhandler.ErroInternoException;
 import com.arthurazevedo.orquestrador.model.EntradaPagamentosDTO;
 import com.arthurazevedo.orquestrador.model.ValidacaoDTO;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrquestraProcessamento {
 
+    private static final int STATUS_VALIDO = 200;
+
     private final PagamentoClient pagamentoClient;
 
     private final VendedorClient vendedorClient;
@@ -19,10 +22,10 @@ public class OrquestraProcessamento {
 
         ValidacaoDTO validacaoVendedor = vendedorClient.validaVendedor(entradaPagamentos.getCodigoVendedor());
 
-        if (validacaoVendedor.getStatus() == 200) {
+        if (validacaoVendedor.getStatus() == STATUS_VALIDO) {
             return pagamentoClient.processaPagamento(entradaPagamentos);
         }
 
-        throw new RuntimeException("ZORRA");
+        throw new ErroInternoException();
     }
 }
